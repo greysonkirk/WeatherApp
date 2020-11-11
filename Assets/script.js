@@ -9,8 +9,12 @@ let curUV = "";
 let curIcon = "";
 let cities = [];
 
-cityWeather()
-fiveDay()
+cityWeather();
+init();
+fiveDay();
+
+
+
 
 function cityWeather() {
     let today = moment().format("MM/D/YY");
@@ -78,20 +82,47 @@ $("#search").on("click", function(event) {
     cityName = $("#city").val();
     cities.push(cityName)
 
-    buildList()
-
+    buildList();
+    $("#forecast").empty();
+    $("#mainData").empty();
+    cityWeather(cityName);
+    fiveDay(cityName);
+    localStorage.setItem("cities", JSON.stringify(cities));
 
 });
 
 function buildList() {
     console.log(cities)
+        //clear li elements so theres no repeats
     $("#history").empty();
     for (let i = 0; i < cities.length; i++) {
         const city = cities[i];
 
-        let cityList = `<li class="list-group-item">${city}</li>`
+        let cityList = `<li id="list" class="list-group-item list-group-item-action">${city}</li>`
 
         $("#history").append(cityList)
 
     }
 };
+
+
+function init() {
+    //local storage set up 
+    let citiesSaved = JSON.parse(localStorage.getItem("cities"));
+    //if nothing has be saved yet, use origial cities array otherwise use citiesSaved array
+    if (citiesSaved !== null) {
+        cities = citiesSaved;
+    }
+    // Render search history
+    buildList();
+}
+$("li").on('click', function(event) {
+    event.preventDefault();
+    let histSearch = $(this).closest("#list").text()
+    console.log(histSearch)
+    cityName = histSearch
+    $("#forecast").empty();
+    $("#mainData").empty();
+    cityWeather(cityName);
+    fiveDay(cityName);
+})
