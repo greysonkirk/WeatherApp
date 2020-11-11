@@ -1,18 +1,18 @@
 let apiKey = '9f75af2cc9785ecfc80929ccd3080e4e'
+
 let cityName = 'Dallas'
-    // let queryURL = `api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`
 let curName = "";
 let curTemp = "";
 let curHumid = "";
 let curWind = "";
 let curUV = "";
 let curIcon = "";
+let cities = [];
 
-
-searchWeather()
+cityWeather()
 fiveDay()
 
-function searchWeather() {
+function cityWeather() {
     let today = moment().format("MM/D/YY");
     let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`
     $.ajax({
@@ -31,8 +31,7 @@ function searchWeather() {
         curTemp = response.main.temp;
         curWind = response.wind.speed;
         curHumid = response.main.humidity;
-        curIcon = response.weather.icon;
-        console.log(response)
+        curIcon = response.weather[0].icon;
         let mainData = `<h2>${curName} (${today})<img src="http://openweathermap.org/img/w/${curIcon}.png"></img></h2>
                             <p>Temperature: ${curTemp} °F</p>
                             <p>Humidity: ${curHumid}%</p>
@@ -51,13 +50,12 @@ function fiveDay() {
     }).then(forecast => {
         console.log(forecast)
         for (let i = 0; i < 40; i += 8) {
-            console.log(forecast.list[i].dt_txt)
             foreDate = (forecast.list[i].dt_txt).slice(0, -8)
             foreTemp = forecast.list[i].main.temp
             foreIcon = forecast.list[i].weather[0].icon
             foreHumid = forecast.list[i].main.humidity
-            let cardData = `<div class="card border-light" style="width: 10rem;">
-                              <div class="card-body bg-primary text-white">
+            let cardData = `<div class="card mx-1 border-light bg-primary rounded" style="width: 10rem;">
+                              <div class="card-body  text-white">
                                <h5 class="card-title">${foreDate}</h5>
                                <p class="card-text"><img src="http://openweathermap.org/img/w/${foreIcon}.png"></img></p>
                                <p class="card-text">Temp: ${foreTemp} °F</p>
@@ -73,3 +71,27 @@ function fiveDay() {
     });
 
 }
+
+
+$("#search").on("click", function(event) {
+    event.preventDefault();
+    cityName = $("#city").val();
+    cities.push(cityName)
+
+    buildList()
+
+
+});
+
+function buildList() {
+    console.log(cities)
+    $("#history").empty();
+    for (let i = 0; i < cities.length; i++) {
+        const city = cities[i];
+
+        let cityList = `<li class="list-group-item">${city}</li>`
+
+        $("#history").append(cityList)
+
+    }
+};
