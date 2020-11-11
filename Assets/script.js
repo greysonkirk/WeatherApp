@@ -19,6 +19,7 @@ fiveDay();
 
 //hits the openweather api with Dallas as the default and runs after a search is done
 function cityWeather() {
+
     let today = moment().format("MM/D/YY");
     let queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${apiKey}`
     $.ajax({
@@ -45,6 +46,7 @@ function cityWeather() {
         $("#mainData").append(mainData)
 
     });
+
 };
 
 //getting the five day forecast
@@ -72,6 +74,7 @@ function fiveDay() {
             $("#forecast").append(cardData)
         }
     });
+
 }
 
 //when search button is clicked, the main data and forecast are emptied out to prevent multiples 
