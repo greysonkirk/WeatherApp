@@ -27,7 +27,7 @@ function cityWeather() {
     }).then(response => {
 
         //this call gets the uv index
-        $.ajax(`http://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=${apiKey}`).then(uvResp => {
+        $.ajax(`https://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=${apiKey}`).then(uvResp => {
             let uvData = `<p>UV Index: ${uvResp.value} </p>`
             $("#mainData").append(uvData)
         })
